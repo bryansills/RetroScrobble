@@ -8,6 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import retrofit.Callback;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -25,6 +30,25 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 nowPlayingButton.setEnabled(true);
                 scrobbleButton.setEnabled(true);
+
+                RestAdapter restAdapter = new RestAdapter.Builder()
+                        .setEndpoint("https://ws.audioscrobbler.com/2.0")
+                        .setLogLevel(RestAdapter.LogLevel.FULL)
+                        .build();
+
+                LastFmApi lastFmApi = restAdapter.create(LastFmApi.class);
+
+                lastFmApi.authenticate("auth.getMobileSession", "json", new Callback<Response>() {
+                    @Override
+                    public void success(Response response, Response response2) {
+                        Toast.makeText(MainActivity.this, "Success?", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Toast.makeText(MainActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 
