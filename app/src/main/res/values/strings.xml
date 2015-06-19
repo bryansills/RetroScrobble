@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">RetroScrobble</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="authenticate">Authenticate</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="scrobble">Scrobble</string>
+</resources>
