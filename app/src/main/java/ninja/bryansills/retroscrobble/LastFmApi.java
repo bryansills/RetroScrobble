@@ -13,5 +13,8 @@ public interface LastFmApi {
 
     @FormUrlEncoded
     @POST("/")
-    void authenticate(@Field("method") String method, @Field("format") String format, Callback<String> callback);
+    void authenticate(@Field("method") String method,
+                      @Field("format") String format,
+                      @Field("api_key") String apiKey,
+                      Callback<String> callback);
 }

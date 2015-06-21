@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
                 mNowPlayingButton.setEnabled(true);
                 mScrobbleButton.setEnabled(true);
 
-                mLastFmApi.authenticate("auth.getMobileSession", "json", new Callback<String>() {
+                mLastFmApi.authenticate("auth.getMobileSession", "json", BuildConfig.LAST_FM_API_KEY, new Callback<String>() {
                     @Override
                     public void success(String response, Response response2) {
                         mResponseTextView.setText(response);

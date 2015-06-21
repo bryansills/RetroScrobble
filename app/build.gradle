@@ -16,6 +16,10 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            buildConfigField "String", "LAST_FM_API_KEY", LAST_FM_API_KEY
+            buildConfigField "String", "LAST_FM_SECRET", LAST_FM_SECRET
+        }
     }
 }
 
