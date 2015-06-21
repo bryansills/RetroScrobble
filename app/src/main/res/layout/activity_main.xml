@@ -10,27 +10,52 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/edittext_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/username"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/edittext_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="@string/password"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/button_authenticate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/authenticate"/>
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/button_now_playing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
         android:text="@string/now_playing"/>
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/button_scrobble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
         android:text="@string/scrobble"/>
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textview_response"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

@@ -6,4 +6,6 @@
     <string name="authenticate">Authenticate</string>
     <string name="now_playing">Now Playing</string>
     <string name="scrobble">Scrobble</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
 </resources>

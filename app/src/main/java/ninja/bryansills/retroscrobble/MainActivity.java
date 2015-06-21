@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,8 @@ import retrofit.client.Response;
 
 public class MainActivity extends ActionBarActivity {
 
+    private EditText mUsernameEditText;
+    private EditText mPasswordEditText;
     private Button mAuthenticateButton;
     private Button mNowPlayingButton;
     private Button mScrobbleButton;
@@ -29,6 +32,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mUsernameEditText = (EditText) findViewById(R.id.edittext_username);
+        mPasswordEditText = (EditText) findViewById(R.id.edittext_password);
         mAuthenticateButton = (Button) findViewById(R.id.button_authenticate);
         mNowPlayingButton = (Button) findViewById(R.id.button_now_playing);
         mScrobbleButton = (Button) findViewById(R.id.button_scrobble);
@@ -36,7 +41,7 @@ public class MainActivity extends ActionBarActivity {
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("https://ws.audioscrobbler.com/2.0")
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
                 .setConverter(new StringConverter())
                 .build();
 
@@ -48,7 +53,12 @@ public class MainActivity extends ActionBarActivity {
                 mNowPlayingButton.setEnabled(true);
                 mScrobbleButton.setEnabled(true);
 
-                mLastFmApi.authenticate("auth.getMobileSession", "json", BuildConfig.LAST_FM_API_KEY, new Callback<String>() {
+                String username = mUsernameEditText.getText().toString();
+                String password = mPasswordEditText.getText().toString();
+
+                mLastFmApi.authenticate("json", "auth.getMobileSession",
+                        username, password, BuildConfig.LAST_FM_API_KEY,
+                        "564e9efa8669106db77153e4611ac8e1", new Callback<String>() {
                     @Override
                     public void success(String response, Response response2) {
                         mResponseTextView.setText(response);
