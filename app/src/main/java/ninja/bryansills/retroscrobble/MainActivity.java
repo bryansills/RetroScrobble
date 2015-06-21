@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import retrofit.Callback;
@@ -16,32 +17,41 @@ import retrofit.client.Response;
 
 public class MainActivity extends ActionBarActivity {
 
+    private Button mAuthenticateButton;
+    private Button mNowPlayingButton;
+    private Button mScrobbleButton;
+    private TextView mResponseTextView;
+
+    private LastFmApi mLastFmApi;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        final Button authenticateButton = (Button) findViewById(R.id.button_authenticate);
-        final Button nowPlayingButton = (Button) findViewById(R.id.button_now_playing);
-        final Button scrobbleButton = (Button) findViewById(R.id.button_scrobble);
+        mAuthenticateButton = (Button) findViewById(R.id.button_authenticate);
+        mNowPlayingButton = (Button) findViewById(R.id.button_now_playing);
+        mScrobbleButton = (Button) findViewById(R.id.button_scrobble);
+        mResponseTextView = (TextView) findViewById(R.id.textview_response);
 
-        authenticateButton.setOnClickListener(new View.OnClickListener() {
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint("https://ws.audioscrobbler.com/2.0")
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setConverter(new StringConverter())
+                .build();
+
+        mLastFmApi = restAdapter.create(LastFmApi.class);
+
+        mAuthenticateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nowPlayingButton.setEnabled(true);
-                scrobbleButton.setEnabled(true);
+                mNowPlayingButton.setEnabled(true);
+                mScrobbleButton.setEnabled(true);
 
-                RestAdapter restAdapter = new RestAdapter.Builder()
-                        .setEndpoint("https://ws.audioscrobbler.com/2.0")
-                        .setLogLevel(RestAdapter.LogLevel.FULL)
-                        .build();
-
-                LastFmApi lastFmApi = restAdapter.create(LastFmApi.class);
-
-                lastFmApi.authenticate("auth.getMobileSession", "json", new Callback<Response>() {
+                mLastFmApi.authenticate("auth.getMobileSession", "json", new Callback<String>() {
                     @Override
-                    public void success(Response response, Response response2) {
-                        Toast.makeText(MainActivity.this, "Success?", Toast.LENGTH_LONG).show();
+                    public void success(String response, Response response2) {
+                        mResponseTextView.setText(response);
                     }
 
                     @Override
@@ -52,14 +62,14 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        nowPlayingButton.setOnClickListener(new View.OnClickListener() {
+        mNowPlayingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Now playing", Toast.LENGTH_LONG).show();
             }
         });
 
-        scrobbleButton.setOnClickListener(new View.OnClickListener() {
+        mScrobbleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(MainActivity.this, "Scrobble", Toast.LENGTH_LONG).show();
