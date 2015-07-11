@@ -56,9 +56,11 @@ public class MainActivity extends ActionBarActivity {
                 String username = mUsernameEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
 
-                mLastFmApi.authenticate("json", "auth.getMobileSession",
-                        username, password, BuildConfig.LAST_FM_API_KEY,
-                        "564e9efa8669106db77153e4611ac8e1", new Callback<String>() {
+                mLastFmApi.authenticate(LastFmApi.AUTH_CONSTS, username, password,
+                        Util.generateLastFmApiSig(LastFmApi.AUTH_CONSTS,
+                                LastFmApi.USERNAME, username,
+                                LastFmApi.PASSWORD, password),
+                        new Callback<String>() {
                     @Override
                     public void success(String response, Response response2) {
                         mResponseTextView.setText(response);
