@@ -2,6 +2,7 @@ package ninja.bryansills.retroscrobble;
 
 import java.util.Map;
 
+import ninja.bryansills.retroscrobble.model.AuthenticationResponse;
 import retrofit.Callback;
 import retrofit.http.Field;
 import retrofit.http.FieldMap;
@@ -28,5 +29,5 @@ public interface LastFmApi {
                       @Field(USERNAME) String username,
                       @Field(PASSWORD) String password,
                       @Field(API_SIG) String apiSig,
-                      Callback<String> callback);
+                      Callback<AuthenticationResponse> callback);
 }

@@ -2,6 +2,7 @@ package ninja.bryansills.retroscrobble;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,13 +11,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import ninja.bryansills.retroscrobble.model.AuthenticationResponse;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     private EditText mUsernameEditText;
     private EditText mPasswordEditText;
@@ -39,10 +45,13 @@ public class MainActivity extends ActionBarActivity {
         mScrobbleButton = (Button) findViewById(R.id.button_scrobble);
         mResponseTextView = (TextView) findViewById(R.id.textview_response);
 
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("https://ws.audioscrobbler.com/2.0")
                 .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
-                .setConverter(new StringConverter())
+                .setConverter(new GsonConverter(gson))
                 .build();
 
         mLastFmApi = restAdapter.create(LastFmApi.class);
@@ -60,10 +69,14 @@ public class MainActivity extends ActionBarActivity {
                         Util.generateLastFmApiSig(LastFmApi.AUTH_CONSTS,
                                 LastFmApi.USERNAME, username,
                                 LastFmApi.PASSWORD, password),
-                        new Callback<String>() {
+                        new Callback<AuthenticationResponse>() {
                     @Override
-                    public void success(String response, Response response2) {
-                        mResponseTextView.setText(response);
+                    public void success(AuthenticationResponse response, Response response2) {
+                        if (response.getSession() != null) {
+                            mResponseTextView.setText(response.getSession().getSessionKey());
+                        } else {
+                            mResponseTextView.setText(String.valueOf(response.getError()));
+                        }
                     }
 
                     @Override
