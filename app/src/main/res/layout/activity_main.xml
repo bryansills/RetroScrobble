@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.AppCompatEditText
+        <EditText
             android:id="@+id/edittext_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.AppCompatEditText
+        <EditText
             android:id="@+id/edittext_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,27 +35,27 @@
 
     </android.support.design.widget.TextInputLayout>
 
-    <android.support.v7.widget.AppCompatButton
+    <Button
         android:id="@+id/button_authenticate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/authenticate"/>
 
-    <android.support.v7.widget.AppCompatButton
+    <Button
         android:id="@+id/button_now_playing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
         android:text="@string/now_playing"/>
 
-    <android.support.v7.widget.AppCompatButton
+    <Button
         android:id="@+id/button_scrobble"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:enabled="false"
         android:text="@string/scrobble"/>
 
-    <android.support.v7.widget.AppCompatTextView
+    <TextView
         android:id="@+id/textview_response"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
