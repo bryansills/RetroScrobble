@@ -1,6 +1,5 @@
 package ninja.bryansills.retroscrobble;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -15,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import ninja.bryansills.retroscrobble.model.AuthenticationResponse;
+import ninja.bryansills.retroscrobble.model.Session;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        AuthenticationResponse.Session session = PreferenceManager.getSession(this);
+        Session session = PreferenceManager.getSession(this);
 
         if (session != null) {
             mResponseTextView.setText(session.getSessionKey());

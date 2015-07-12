@@ -21,20 +21,4 @@ public class AuthenticationResponse {
         return error;
     }
 
-    public static class Session {
-
-        @SerializedName("name")
-        private String username;
-
-        @SerializedName("key")
-        private String sessionKey;
-
-        public String getUsername() {
-            return username;
-        }
-
-        public String getSessionKey() {
-            return sessionKey;
-        }
-    }
 }
