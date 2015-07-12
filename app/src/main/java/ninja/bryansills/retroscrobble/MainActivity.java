@@ -70,20 +70,21 @@ public class MainActivity extends AppCompatActivity {
                                 LastFmApi.USERNAME, username,
                                 LastFmApi.PASSWORD, password),
                         new Callback<AuthenticationResponse>() {
-                    @Override
-                    public void success(AuthenticationResponse response, Response response2) {
-                        if (response.getSession() != null) {
-                            mResponseTextView.setText(response.getSession().getSessionKey());
-                        } else {
-                            mResponseTextView.setText(String.valueOf(response.getError()));
-                        }
-                    }
+                            @Override
+                            public void success(AuthenticationResponse response, Response response2) {
+                                if (response.getSession() != null) {
+                                    mResponseTextView.setText(response.getSession().getSessionKey());
+                                    PreferenceManager.putSession(MainActivity.this, response.getSession());
+                                } else {
+                                    mResponseTextView.setText(String.valueOf(response.getError()));
+                                }
+                            }
 
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Toast.makeText(MainActivity.this, error.toString(), Toast.LENGTH_LONG).show();
-                    }
-                });
+                            @Override
+                            public void failure(RetrofitError error) {
+                                Toast.makeText(MainActivity.this, error.toString(), Toast.LENGTH_LONG).show();
+                            }
+                        });
             }
         });
 
@@ -100,6 +101,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Scrobble", Toast.LENGTH_LONG).show();
             }
         });
+
+        AuthenticationResponse.Session session = PreferenceManager.getSession(this);
+
+        if (session != null) {
+            mResponseTextView.setText(session.getSessionKey());
+        }
     }
 
     @Override
