@@ -3,6 +3,7 @@ package ninja.bryansills.retroscrobble;
 import java.util.Map;
 
 import ninja.bryansills.retroscrobble.model.AuthenticationResponse;
+import retrofit.Call;
 import retrofit.Callback;
 import retrofit.http.Field;
 import retrofit.http.FieldMap;
@@ -24,10 +25,9 @@ public interface LastFmApi {
             "api_key", BuildConfig.LAST_FM_API_KEY);
 
     @FormUrlEncoded
-    @POST("/")
-    void authenticate(@FieldMap Map constants,
+    @POST
+    Call<AuthenticationResponse> authenticate(@FieldMap Map constants,
                       @Field(USERNAME) String username,
                       @Field(PASSWORD) String password,
-                      @Field(API_SIG) String apiSig,
-                      Callback<AuthenticationResponse> callback);
+                      @Field(API_SIG) String apiSig);
 }

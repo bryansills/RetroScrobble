@@ -15,11 +15,11 @@ import com.google.gson.GsonBuilder;
 
 import ninja.bryansills.retroscrobble.model.AuthenticationResponse;
 import ninja.bryansills.retroscrobble.model.Session;
+import retrofit.Call;
 import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
-import retrofit.converter.GsonConverter;
+import retrofit.GsonConverterFactory;
+import retrofit.Response;
+import retrofit.Retrofit;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -45,17 +45,19 @@ public class MainActivity extends AppCompatActivity {
         mScrobbleButton = (Button) findViewById(R.id.button_scrobble);
         mResponseTextView = (TextView) findViewById(R.id.textview_response);
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setEndpoint("https://ws.audioscrobbler.com/2.0")
-                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
-                .setConverter(new GsonConverter(gson))
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://ws.audioscrobbler.com/2.0/")
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        mLastFmApi = restAdapter.create(LastFmApi.class);
+//        Retrofit restAdapter = new Retrofit.Builder()
+//                .baseUrl("https://ws.audioscrobbler.com/2.0")
+//                .setLogLevel(BuildConfig.DEBUG ? RestAdapter.LogLevel.FULL : RestAdapter.LogLevel.NONE)
+//                .setConverter(new GsonConverter(gson))
+//                .build();
 
+        mLastFmApi = retrofit.create(LastFmApi.class);
+//
         mAuthenticateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,26 +67,28 @@ public class MainActivity extends AppCompatActivity {
                 String username = mUsernameEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
 
-                mLastFmApi.authenticate(LastFmApi.AUTH_CONSTS, username, password,
+                Call<AuthenticationResponse> call = mLastFmApi.authenticate(
+                        LastFmApi.AUTH_CONSTS, username, password,
                         Util.generateLastFmApiSig(LastFmApi.AUTH_CONSTS,
-                                LastFmApi.USERNAME, username,
-                                LastFmApi.PASSWORD, password),
-                        new Callback<AuthenticationResponse>() {
-                            @Override
-                            public void success(AuthenticationResponse response, Response response2) {
-                                if (response.getSession() != null) {
-                                    mResponseTextView.setText(response.getSession().getSessionKey());
-                                    PreferenceManager.putSession(MainActivity.this, response.getSession());
-                                } else {
-                                    mResponseTextView.setText(String.valueOf(response.getError()));
-                                }
-                            }
+                                                  LastFmApi.USERNAME, username,
+                                                  LastFmApi.PASSWORD, password));
 
-                            @Override
-                            public void failure(RetrofitError error) {
-                                Toast.makeText(MainActivity.this, error.toString(), Toast.LENGTH_LONG).show();
-                            }
-                        });
+                call.enqueue(new Callback<AuthenticationResponse>() {
+                    @Override
+                    public void onResponse(Response<AuthenticationResponse> response) {
+                        if (response.body() != null) {
+                            mResponseTextView.setText(response.body().getSession().getSessionKey());
+                            PreferenceManager.putSession(MainActivity.this, response.body().getSession());
+                        } else {
+                            Toast.makeText(MainActivity.this, response.toString(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
             }
         });
 
